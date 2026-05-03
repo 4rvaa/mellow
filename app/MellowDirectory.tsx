@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useMemo, useState } from "react";
 import {
   Search,
@@ -16,8 +17,6 @@ import {
   ExternalLink,
   Filter,
 } from "lucide-react";
-
-import Image from "next/image";
 
 export type Venue = {
   name: string;
@@ -205,7 +204,13 @@ export default function MellowDirectory({ venues }: { venues: Venue[] }) {
   }, [venues, search, area, openLate, wifiOnly, powerOnly, quietOnly, verifiedOnly]);
 
   return (
-    <main className="min-h-screen bg-[#FBF4EA] text-[#4D3827]">
+    <main className="min-h-screen overflow-hidden bg-[#FBF4EA] text-[#4D3827]">
+      <div className="pointer-events-none fixed inset-0 -z-10">
+        <div className="absolute left-[-10%] top-[-10%] h-80 w-80 rounded-full bg-[#8E99A2]/20 blur-3xl" />
+        <div className="absolute right-[-10%] top-[20%] h-96 w-96 rounded-full bg-[#AAA793]/20 blur-3xl" />
+        <div className="absolute bottom-[-10%] left-[30%] h-96 w-96 rounded-full bg-[#B49F88]/20 blur-3xl" />
+      </div>
+      
       <header className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
         <div className="flex items-center gap-3">
           <Image
