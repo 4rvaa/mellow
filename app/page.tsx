@@ -22,10 +22,30 @@ function get(row: Record<string, string>, possibleKeys: string[]) {
 }
 
 function normaliseArea(value: string) {
-  return value
-    .replace("Adelaide CBD East", "Adelaide CBD – East")
-    .replace("Adelaide CBD West", "Adelaide CBD – West")
-    .replace("Adelaide CBD South", "Adelaide CBD – South");
+  const area = value
+    .trim()
+    .replace(/\s+/g, " ")
+    .replace(/[–—]/g, "-");
+
+  const lower = area.toLowerCase();
+
+  if (/^adelaide cbd\s*-?\s*east$/.test(lower)) {
+    return "Adelaide CBD – East";
+  }
+
+  if (/^adelaide cbd\s*-?\s*west$/.test(lower)) {
+    return "Adelaide CBD – West";
+  }
+
+  if (/^adelaide cbd\s*-?\s*south$/.test(lower)) {
+    return "Adelaide CBD – South";
+  }
+
+  if (lower === "north adelaide") {
+    return "North Adelaide";
+  }
+
+  return area;
 }
 
 async function getVenues(): Promise<Venue[]> {
