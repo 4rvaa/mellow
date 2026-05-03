@@ -17,6 +17,8 @@ import {
   Filter,
 } from "lucide-react";
 
+import Image from "next/image";
+
 export type Venue = {
   name: string;
   area: string;
@@ -205,9 +207,15 @@ export default function MellowDirectory({ venues }: { venues: Venue[] }) {
   return (
     <main className="min-h-screen bg-[#FBF4EA] text-[#4D3827]">
       <header className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
-        <div>
-          <p className="text-3xl font-semibold tracking-tight">mellow</p>
-          <p className="text-sm text-[#8B7B6B]">Work-friendly café guide</p>
+        <div className="flex items-center gap-3">
+          <Image
+            src="/mellow-wordmark.png"
+            alt="Mellow"
+            width={190}
+            height={80}
+            className="h-14 w-auto"
+            priority
+          />
         </div>
 
         <nav className="hidden items-center gap-6 text-sm font-medium text-[#6F5D4C] md:flex">
@@ -226,16 +234,15 @@ export default function MellowDirectory({ venues }: { venues: Venue[] }) {
       <section className="mx-auto max-w-7xl px-6 pb-12 pt-10">
         <div className="max-w-3xl">
           <p className="mb-5 inline-flex rounded-full border border-[#E8DDCF] bg-white/60 px-4 py-2 text-sm font-medium text-[#6F5D4C]">
-            Adelaide cafés · WiFi · power · noise · hours
+            Because vibes don't charge your laptop.
           </p>
 
-          <h1 className="text-5xl font-semibold leading-tight tracking-tight md:text-7xl">
-            Find cafés to work from.
+          <h1 className="max-w-5xl text-5xl font-semibold leading-tight tracking-tight md:text-7xl">
+            For people who check for power points before the menu.
           </h1>
 
           <p className="mt-6 max-w-2xl text-lg leading-8 text-[#6F5D4C]">
-            Mellow helps you choose cafés with WiFi, usable power spots, noise
-            level, opening hours, accessibility and a simple Mellow Rating.
+            WiFi, power, noise and hours - café hunting, made mellow.
           </p>
 
           <div className="mt-8 flex max-w-2xl items-center gap-3 rounded-[24px] border border-[#E8DDCF] bg-white/70 p-3 shadow-sm">
