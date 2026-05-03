@@ -48,8 +48,6 @@ const areas = [
   "North Adelaide",
 ];
 
-const openLateOptions = ["All", "Yes", "Some days", "No", "Unknown"];
-
 function hasUsablePower(value: string) {
   return ["1–2 usable spots", "3–5 usable spots", "6+ usable spots"].includes(
     value
@@ -162,14 +160,34 @@ function VenueCard({ venue }: { venue: Venue }) {
   );
 }
 
-export default function MellowDirectory({ venues }: { venues: Venue[] }) {
-  const [search, setSearch] = useState("");
-  const [area, setArea] = useState("All");
-  const [openLate, setOpenLate] = useState("All");
-  const [wifiOnly, setWifiOnly] = useState(false);
-  const [powerOnly, setPowerOnly] = useState(false);
-  const [quietOnly, setQuietOnly] = useState(false);
-  const [verifiedOnly, setVerifiedOnly] = useState(false);
+type InitialFilters = {
+  search?: string;
+  area?: string;
+  openLateOnly?: boolean;
+  wifiOnly?: boolean;
+  powerOnly?: boolean;
+  quietOnly?: boolean;
+  verifiedOnly?: boolean;
+};
+
+export default function MellowDirectory({
+  venues,
+  initialFilters = {},
+}: {
+  venues: Venue[];
+  initialFilters?: InitialFilters;
+}) {
+  const [search, setSearch] = useState(initialFilters.search ?? "");
+  const [area, setArea] = useState(initialFilters.area ?? "All");
+  const [openLateOnly, setOpenLateOnly] = useState(
+    initialFilters.openLateOnly ?? false
+  );
+  const [wifiOnly, setWifiOnly] = useState(initialFilters.wifiOnly ?? false);
+  const [powerOnly, setPowerOnly] = useState(initialFilters.powerOnly ?? false);
+  const [quietOnly, setQuietOnly] = useState(initialFilters.quietOnly ?? false);
+  const [verifiedOnly, setVerifiedOnly] = useState(
+    initialFilters.verifiedOnly ?? false
+  );
 
   const filteredVenues = useMemo(() => {
     return venues.filter((venue) => {
@@ -184,7 +202,7 @@ export default function MellowDirectory({ venues }: { venues: Venue[] }) {
 
       const matchesArea = area === "All" || venue.area === area;
       const matchesOpenLate =
-        openLate === "All" || venue.openLate === openLate;
+        !openLateOnly || ["Yes", "Some days"].includes(venue.openLate);
       const matchesWifi = !wifiOnly || venue.freeWifi === "Yes";
       const matchesPower = !powerOnly || hasUsablePower(venue.usablePowerSpots);
       const matchesQuiet = !quietOnly || venue.noiseLevel === "Quiet";
@@ -201,7 +219,7 @@ export default function MellowDirectory({ venues }: { venues: Venue[] }) {
         matchesVerified
       );
     });
-  }, [venues, search, area, openLate, wifiOnly, powerOnly, quietOnly, verifiedOnly]);
+  }, [venues, search, area, openLateOnly, wifiOnly, powerOnly, quietOnly, verifiedOnly]);
 
   return (
     <main className="min-h-screen overflow-hidden bg-[#FBF4EA] text-[#4D3827]">
@@ -211,51 +229,54 @@ export default function MellowDirectory({ venues }: { venues: Venue[] }) {
         <div className="absolute bottom-[-10%] left-[30%] h-96 w-96 rounded-full bg-[#B49F88]/20 blur-3xl" />
       </div>
       
-      <header className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
-        <div className="flex items-center gap-3">
-          <Image
-            src="/mellow-wordmark.png"
-            alt="Mellow"
-            width={190}
-            height={80}
-            className="h-14 w-auto"
-            priority
-          />
-        </div>
-
-        <nav className="hidden items-center gap-6 text-sm font-medium text-[#6F5D4C] md:flex">
-          <a href="#venues" className="hover:text-[#4D3827]">
+      <header className="mx-auto flex max-w-7xl items-center justify-center px-6 py-6">
+        <nav className="flex items-center gap-3 text-sm font-semibold text-[#4D3827]">
+          <a
+            href="/venues"
+            className="rounded-full border border-[#D8CDC0] bg-white/70 px-4 py-2 shadow-sm transition hover:-translate-y-0.5 hover:bg-[#FFF9F1]"
+          >
             Venues
           </a>
-          <a href="#areas" className="hover:text-[#4D3827]">
+          <a
+            href="/areas"
+            className="rounded-full border border-[#D8CDC0] bg-white/70 px-4 py-2 shadow-sm transition hover:-translate-y-0.5 hover:bg-[#FFF9F1]"
+          >
             Areas
           </a>
-          <a href="#about" className="hover:text-[#4D3827]">
+          <a
+            href="/about"
+            className="rounded-full border border-[#D8CDC0] bg-white/70 px-4 py-2 shadow-sm transition hover:-translate-y-0.5 hover:bg-[#FFF9F1]"
+          >
             About
           </a>
         </nav>
       </header>
 
-      <section className="mx-auto max-w-7xl px-6 pb-12 pt-10">
-        <div className="max-w-3xl">
-          <p className="mb-5 inline-flex rounded-full border border-[#E8DDCF] bg-white/60 px-4 py-2 text-sm font-medium text-[#6F5D4C]">
-            Because vibes don't charge your laptop.
-          </p>
+      <section className="mx-auto max-w-7xl px-6 pb-16 pt-4 text-center">
+        <div className="mx-auto flex max-w-5xl flex-col items-center">
+          <Image
+            src="/mellow-wordmark.png"
+            alt="Mellow"
+            width={760}
+            height={280}
+            className="mb-5 h-32 w-auto object-contain md:h-44"
+            priority
+          />
 
-          <h1 className="max-w-5xl text-5xl font-semibold leading-tight tracking-tight md:text-7xl">
+          <h1 className="max-w-3xl text-3xl font-bold leading-tight tracking-tight text-[#4D3827] md:text-4xl lg:text-5xl">
             For people who check for power points before the menu.
           </h1>
 
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-[#6F5D4C]">
-            WiFi, power, noise and hours - café hunting, made mellow.
+          <p className="mt-6 max-w-2xl text-base font-medium leading-8 text-[#6F5D4C] md:text-lg">
+            WiFi, power, noise and hours — café hunting, made mellow.
           </p>
 
-          <div className="mt-8 flex max-w-2xl items-center gap-3 rounded-[24px] border border-[#E8DDCF] bg-white/70 p-3 shadow-sm">
-            <Search className="ml-2 h-5 w-5 text-[#8E99A2]" />
+          <div className="mt-9 flex w-full max-w-2xl items-center gap-3 rounded-[26px] border border-[#E8DDCF] bg-white/80 p-3 text-left shadow-sm">
+            <Search className="ml-2 h-5 w-5 shrink-0 text-[#8E99A2]" />
             <input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              className="w-full bg-transparent text-base outline-none placeholder:text-[#9B8D7C]"
+              className="w-full bg-transparent text-base font-medium text-[#4D3827] outline-none placeholder:text-[#9B8D7C]"
               placeholder="Search café, area, or street..."
             />
           </div>
@@ -308,17 +329,13 @@ export default function MellowDirectory({ venues }: { venues: Venue[] }) {
               </select>
             </label>
 
-            <label className="text-sm font-medium text-[#6F5D4C]">
+            <label className="flex items-center gap-3 rounded-2xl bg-[#FFF9F1] px-4 py-3 text-sm font-semibold text-[#4D3827]">
+              <input
+                type="checkbox"
+                checked={openLateOnly}
+                onChange={(event) => setOpenLateOnly(event.target.checked)}
+              />
               Open late
-              <select
-                value={openLate}
-                onChange={(event) => setOpenLate(event.target.value)}
-                className="mt-2 w-full rounded-2xl border border-[#E8DDCF] bg-[#FFF9F1] px-4 py-3 outline-none"
-              >
-                {openLateOptions.map((option) => (
-                  <option key={option}>{option}</option>
-                ))}
-              </select>
             </label>
 
             <label className="flex items-center gap-3 rounded-2xl bg-[#FFF9F1] px-4 py-3 text-sm font-medium">
@@ -393,7 +410,7 @@ export default function MellowDirectory({ venues }: { venues: Venue[] }) {
       </section>
 
       <footer className="border-t border-[#E8DDCF] px-6 py-8 text-center text-sm text-[#8B7B6B]">
-        mellow · cafés to work from
+        mellow. · cafés to work from
       </footer>
     </main>
   );
