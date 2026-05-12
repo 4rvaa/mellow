@@ -24,3 +24,36 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.mellow-page {
+  min-height: 100vh;
+  color: #4d3827;
+  background:
+    radial-gradient(circle at top left, rgba(142, 153, 162, 0.18), transparent 32%),
+    radial-gradient(circle at top right, rgba(170, 167, 147, 0.16), transparent 34%),
+    radial-gradient(circle at bottom center, rgba(180, 159, 136, 0.14), transparent 38%),
+    #fbf4ea;
+}
+
+@keyframes mellowFloat {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 40%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+.mellow-page {
+  background-size: 140% 140%;
+  animation: mellowFloat 18s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mellow-page {
+    animation: none;
+  }
+}
